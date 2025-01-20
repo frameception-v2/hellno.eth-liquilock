@@ -5,11 +5,13 @@ export async function GET() {
 
   const config = {
     accountAssociation: {
-      header:
-        "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyY2Q4NWEwOTMyNjFmNTkyNzA4MDRBNkVBNjk3Q2VBNENlQkVjYWZFIn0",
-      payload: "eyJkb21haW4iOiJmcmFtZXMtdjIudmVyY2VsLmFwcCJ9",
-      signature:
-        "MHhiNDIwMzQ1MGZkNzgzYTExZjRiOTllZTFlYjA3NmMwOTdjM2JkOTY1NGM2ODZjYjkyZTAyMzk2Y2Q0YjU2MWY1MjY5NjI5ZGQ5NTliYjU0YzEwOGI4OGVmNjdjMTVlZTdjZDc2YTRiMGU5NzkzNzA3YzkxYzFkOWFjNTg0YmQzNjFi",
+      message: {
+        domain: "hellno.eth-liquilock.vercel.app",
+        timestamp: 1737378834,
+        expirationTime: 1745154834
+      },
+      signature: "9844ec2db885eb8a985f2eaa4dcd64275ccc4d339ec292f7bd89dd827c68316a17f205c6f592cda010ef229a7b0d5e3cfd275dd123be88dfcfeccdf3e63491421c",
+      signingKey: "17628ec2518cf311ba29f10b3ae523d86e9efdb30211ed0978cf6769cbd36b15"
     },
     frame: {
       version: "1",

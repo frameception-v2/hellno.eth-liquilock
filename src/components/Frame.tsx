@@ -17,19 +17,89 @@ import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import { PROJECT_TITLE } from "~/lib/constants";
 
-function ExampleCard() {
+function DonationCard() {
+  const [amount, setAmount] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
+
+  const { config } = usePrepareContractWrite({
+    address: LIQUILOCK_CONTRACT_ADDRESS,
+    abi: LIQUILOCK_ABI,
+    functionName: 'donate',
+    args: [WETH_ADDRESS, amount ? BigInt(Number(amount) * 10 ** ETH_DECIMALS) : BigInt(0)],
+    enabled: !!amount && Number(amount) > 0
+  });
+
+  const { write, data } = useContractWrite(config);
+  const { isLoading: isConfirming } = useWaitForTransaction({
+    hash: data?.hash,
+    onSuccess: () => {
+      setIsLoading(false);
+      setTxHash(data.hash);
+    },
+    onError: (error) => {
+      setIsLoading(false);
+      setError(error.message);
+    }
+  });
+
+  const handleDonate = async () => {
+    if (!amount || Number(amount) <= 0) {
+      setError("Please enter a valid amount");
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+    try {
+      write?.();
+    } catch (err) {
+      setIsLoading(false);
+      setError("Transaction failed");
+    }
+  };
+
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-neutral-900">Welcome to the Frame Template</CardTitle>
+        <CardTitle className="text-neutral-900">Donate to LiquiLock</CardTitle>
         <CardDescription className="text-neutral-600">
-          This is an example card that you can customize or remove
+          Contribute ETH to receive LP tokens
         </CardDescription>
       </CardHeader>
-      <CardContent className="text-neutral-800">
-        <p>
-          Your frame content goes here. The text is intentionally dark to ensure good readability.
-        </p>
+      <CardContent className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="amount" className="text-neutral-800">
+            ETH Amount
+          </Label>
+          <input
+            id="amount"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="p-2 border rounded"
+            placeholder="Enter ETH amount"
+            disabled={isLoading}
+          />
+        </div>
+        
+        {error && (
+          <div className="text-red-500 text-sm">{error}</div>
+        )}
+
+        {txHash ? (
+          <div className="text-green-500 text-sm">
+            Donation successful! Tx: {truncateAddress(txHash)}
+          </div>
+        ) : (
+          <PurpleButton
+            onClick={handleDonate}
+            disabled={isLoading || !write}
+          >
+            {isLoading ? "Processing..." : "Donate"}
+          </PurpleButton>
+        )}
       </CardContent>
     </Card>
   );
@@ -137,7 +207,7 @@ export default function Frame(
     >
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
-        <ExampleCard />
+        <DonationCard />
       </div>
     </div>
   );

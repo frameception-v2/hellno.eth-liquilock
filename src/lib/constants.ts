@@ -1,6 +1,6 @@
-export const PROJECT_ID = 'liquilock-frame';
-export const PROJECT_TITLE = "LiquiLock Frame";
-export const PROJECT_DESCRIPTION = "Donate ETH to LiquiLock and receive LP tokens";
+export const PROJECT_ID = 'LiquiLock';
+export const PROJECT_TITLE = "LiquiLock";
+export const PROJECT_DESCRIPTION = "Secure your liquidity with LiquiLock - the decentralized solution for token locking and vesting";
 
 export const LIQUILOCK_CONTRACT_ADDRESS = "0x719Fdd695Be2b410a22D0F3AC87151e09f069e33";
 export const LIQUILOCK_ABI = [
